@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taylor Rig | Titan Pump Hoist Production System</title>
+  <meta name="description" content="Titan Pump Hoist production system and inventory planning case study for Taylor Rig and Equipment LLC." />
+  <style>
+    :root {
+      --navy: #0b1f33;
+      --navy-2: #102a43;
+      --blue: #1f5f99;
+      --teal: #0f766e;
+      --ink: #1f2937;
+      --muted: #64748b;
+      --line: #d8dee8;
+      --panel: #ffffff;
+      --bg: #f5f7fb;
+      --soft: #eef3f8;
+      --max: 1160px;
+      --radius: 14px;
+      --shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .shell { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+
+    .topbar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .nav {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 0.92rem; }
+    .nav-links a:hover { color: var(--navy); }
+
+    .hero {
+      padding: 70px 0 42px;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f7fb 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--blue);
+      background: #e8f1fb;
+      border: 1px solid #cfe1f3;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      font-weight: 750;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      max-width: 780px;
+      color: var(--navy);
+      font-size: clamp(2.35rem, 5vw, 4.7rem);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+      margin-bottom: 18px;
+    }
+
+    .lead {
+      color: #43546a;
+      font-size: 1.08rem;
+      max-width: 720px;
+      margin-bottom: 26px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .meta-card, .metric, .card, .figure-card, .policy-card, .note-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card { padding: 16px; }
+    .meta-card span, .metric span {
+      display: block;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.74rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .meta-card strong { color: var(--navy); font-size: 0.96rem; }
+
+    .hero-figure { overflow: hidden; }
+    .hero-figure img { width: 100%; display: block; background: #fff; }
+    .caption {
+      border-top: 1px solid var(--line);
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      background: #fbfdff;
+    }
+
+    section { padding: 58px 0; }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 1fr minmax(260px, 430px);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+
+    .kicker {
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.76rem;
+      font-weight: 850;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      color: var(--navy);
+      font-size: clamp(1.8rem, 3vw, 2.85rem);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p { color: var(--muted); font-size: 0.98rem; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .metric { padding: 22px; min-height: 174px; }
+    .metric strong {
+      display: block;
+      color: var(--navy);
+      font-size: 2.45rem;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin: 8px 0 12px;
+    }
+    .metric p { color: var(--muted); font-size: 0.92rem; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card { padding: 24px; }
+    .card h3 { color: var(--navy); font-size: 1.2rem; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .card p { color: var(--muted); margin-bottom: 14px; }
+
+    .list { list-style: none; display: grid; gap: 10px; }
+    .list li {
+      border-left: 3px solid var(--blue);
+      background: #f8fafc;
+      padding: 11px 12px;
+      border-radius: 8px;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+
+    .tabs {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .tab-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .tab-button {
+      appearance: none;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      padding: 13px 16px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 750;
+    }
+
+    .tab-button.active { background: #ffffff; color: var(--navy); box-shadow: inset 0 -3px 0 var(--blue); }
+    .tab-panel { display: none; padding: 18px; }
+    .tab-panel.active { display: block; }
+    .tab-panel img { width: 100%; display: block; border: 1px solid var(--line); border-radius: 10px; background: #ffffff; }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .figure-card { overflow: hidden; }
+    .figure-card img { width: 100%; display: block; background: #fff; border-bottom: 1px solid var(--line); }
+    .figure-card .body { padding: 16px; }
+    .figure-card h3 { color: var(--navy); font-size: 1.05rem; margin-bottom: 6px; }
+    .figure-card p { color: var(--muted); font-size: 0.92rem; }
+
+    .method-grid, .policy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .policy-card { padding: 22px; }
+    .policy-label {
+      display: inline-block;
+      color: var(--blue);
+      background: #e8f1fb;
+      border: 1px solid #cfe1f3;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.72rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+    .policy-card h3 { color: var(--navy); font-size: 1.12rem; margin-bottom: 9px; }
+    .policy-card p { color: var(--muted); font-size: 0.93rem; margin-bottom: 14px; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tag {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      padding: 5px 8px;
+      color: #475569;
+      font-size: 0.78rem;
+      font-weight: 650;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .note-stack { display: grid; gap: 12px; }
+    .note-card { padding: 18px; }
+    .note-card span {
+      display: block;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      font-weight: 850;
+      margin-bottom: 6px;
+    }
+    .note-card p { color: var(--muted); font-size: 0.93rem; }
+
+    .footer-section {
+      background: var(--navy);
+      color: #dbeafe;
+      padding: 38px 0;
+      margin-top: 36px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .footer-section h2 { color: #ffffff; font-size: 2rem; margin-bottom: 12px; }
+    .footer-section p { color: #b6c7da; }
+    .footer-list { list-style: none; display: grid; gap: 8px; color: #dbeafe; font-size: 0.94rem; }
+
+    footer { padding: 24px 0; color: var(--muted); text-align: center; font-size: 0.86rem; }
+
+    /* Professional motion system: subtle, clean, and presentation-ready */
+    .topbar {
+      transition: box-shadow 260ms ease, background 260ms ease;
+    }
+
+    .topbar.scrolled {
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .brand-mark {
+      transition: transform 260ms ease, background 260ms ease;
+    }
+
+    .brand:hover .brand-mark {
+      transform: translateY(-1px) scale(1.03);
+      background: var(--blue);
+    }
+
+    .nav-links a {
+      position: relative;
+      transition: color 220ms ease;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -6px;
+      height: 2px;
+      background: var(--blue);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 240ms ease;
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .label,
+    h1,
+    .lead,
+    .hero .meta-card,
+    .hero-figure {
+      opacity: 0;
+      animation: heroIn 720ms ease forwards;
+    }
+
+    .label { animation-delay: 80ms; }
+    h1 { animation-delay: 170ms; }
+    .lead { animation-delay: 260ms; }
+    .hero .meta-card:nth-child(1) { animation-delay: 350ms; }
+    .hero .meta-card:nth-child(2) { animation-delay: 430ms; }
+    .hero .meta-card:nth-child(3) { animation-delay: 510ms; }
+    .hero-figure { animation-delay: 360ms; }
+
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 650ms ease, transform 650ms ease;
+      will-change: opacity, transform;
+    }
+
+    .reveal-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .metric,
+    .card,
+    .figure-card,
+    .policy-card,
+    .note-card,
+    .tabs {
+      transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+    }
+
+    .metric:hover,
+    .card:hover,
+    .policy-card:hover,
+    .note-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.11);
+      border-color: #c5d3e3;
+    }
+
+    .figure-card:hover {
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.11);
+      border-color: #c5d3e3;
+    }
+
+    .figure-card img,
+    .tab-panel img {
+      transition: transform 520ms ease, filter 520ms ease;
+    }
+
+    .figure-card:hover img {
+      transform: scale(1.012);
+    }
+
+    .tab-button {
+      transition: background 220ms ease, color 220ms ease, box-shadow 220ms ease;
+    }
+
+    .tab-panel.active {
+      animation: tabFade 360ms ease both;
+    }
+
+    @keyframes tabFade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .metric strong {
+      transition: color 220ms ease;
+    }
+
+    .metric:hover strong {
+      color: var(--blue);
+    }
+
+    .list li,
+    .tag,
+    .footer-list li {
+      transition: transform 220ms ease, background 220ms ease, border-color 220ms ease;
+    }
+
+    .list li:hover {
+      transform: translateX(4px);
+      background: #f1f6fb;
+    }
+
+    .tag:hover {
+      transform: translateY(-2px);
+      border-color: #cbd8e7;
+      background: #eaf1f8;
+    }
+
+    .footer-list li:hover {
+      transform: translateX(4px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+
+      .reveal-item {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid, .split, .schedule-grid, .footer-grid { grid-template-columns: 1fr; }
+      .section-head { grid-template-columns: 1fr; }
+      .metrics, .method-grid, .policy-grid, .figure-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 680px) {
+      .nav { height: auto; padding: 14px 0; align-items: flex-start; flex-direction: column; }
+      .nav-links { width: 100%; overflow-x: auto; gap: 14px; padding-bottom: 4px; }
+      .hero { padding: 46px 0 34px; }
+      .meta-grid, .metrics, .method-grid, .policy-grid, .figure-grid { grid-template-columns: 1fr; }
+      .tab-button { flex: 1 1 50%; border-bottom: 1px solid var(--line); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav shell">
+      <a class="brand" href="#top" aria-label="Project home">
+        <span class="brand-mark">TR</span>
+        <span>Taylor Rig Case Study</span>
+      </a>
+      <div class="nav-links" aria-label="Page navigation">
+        <a href="#summary">Summary</a>
+        <a href="#process">Process Flow</a>
+        <a href="#layout">Layout</a>
+        <a href="#inventory">Inventory</a>
+        <a href="#schedule">Schedule</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <div class="label">Industrial Engineering Capstone · May 2026</div>
+          <h1>Titan Pump Hoist Production System & Inventory Planning</h1>
+          <p class="lead">
+            This project evaluated Taylor Rig and Equipment LLC’s Titan Pump Hoist production process and developed a production and inventory planning framework to support a 30-working-day production target.
+          </p>
+          <div class="meta-grid">
+            <div class="meta-card"><span>Company</span><strong>Taylor Rig and Equipment LLC</strong></div>
+            <div class="meta-card"><span>Scope</span><strong>Production flow, layout, labor, inventory</strong></div>
+            <div class="meta-card"><span>Product</span><strong>Titan Pump Hoist</strong></div>
+          </div>
+        </div>
+        <figure class="figure-card hero-figure">
+          <img src="assets/taylor-main-process.webp" alt="Overall Titan Pump Hoist production process from the report" />
+          <figcaption class="caption">Figure 1. Overall Titan Pump Hoist production process from the project report.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="summary" class="shell">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Executive Summary</div>
+          <h2>Two connected problems were addressed: production structure and material availability.</h2>
+        </div>
+        <p>
+          The analysis focused on creating a feasible cell-based production system and a supporting inventory policy framework so production flow and material planning operate together.
+        </p>
+      </div>
+
+      <div class="metrics">
+        <article class="metric"><span>Current condition</span><strong>~4 mo.</strong><p>Estimated order-to-shipment delivery lead time before the proposed production and inventory framework.</p></article>
+        <article class="metric"><span>Target</span><strong>30</strong><p>Working-day production target established for the Titan Pump Hoist line.</p></article>
+        <article class="metric"><span>Proposed build</span><strong>21</strong><p>Working days required to complete one Titan unit under the proposed schedule.</p></article>
+        <article class="metric"><span>Steady state</span><strong>9</strong><p>Day release interval for introducing a new truck into the production system.</p></article>
+      </div>
+    </section>
+
+    <section id="process" class="shell">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Process Flow</div>
+          <h2>Skid and mast assemblies run in parallel before final truck integration.</h2>
+        </div>
+        <p>
+          The production process begins with fabrication for both skid and mast components, moves through sandblasting and painting, and then separates into assembly paths that converge during final truck installation, testing, inspection, and delivery.
+        </p>
+      </div>
+
+      <div class="tabs">
+        <div class="tab-nav" role="tablist" aria-label="Process flow diagrams">
+          <button class="tab-button active" type="button" data-tab="main-process">Overall Process</button>
+          <button class="tab-button" type="button" data-tab="skid-process">Skid Subprocess</button>
+          <button class="tab-button" type="button" data-tab="mast-process">Mast Subprocess</button>
+        </div>
+        <div class="tab-panel active" id="main-process">
+          <img src="assets/taylor-main-process.webp" alt="Overall Titan Pump Hoist process flow diagram" />
+          <p class="caption">Overall process showing parallel skid and mast fabrication, sandblasting, painting, assembly, truck installation, testing, final inspection, and delivery.</p>
+        </div>
+        <div class="tab-panel" id="skid-process">
+          <img src="assets/taylor-skid-subprocess.webp" alt="Skid assembly subprocess diagram" />
+          <p class="caption">Skid assembly subprocess showing jack installation, fluid system installation, hydraulic routing, control system installation, electrical setup, optional equipment, inspection, and readiness for truck installation.</p>
+        </div>
+        <div class="tab-panel" id="mast-process">
+          <img src="assets/taylor-mast-subprocess.webp" alt="Mast assembly subprocess diagram" />
+          <p class="caption">Mast assembly subprocess showing lower mast assembly, upper mast assembly, structural components, mechanical and cable systems, electrical and utility integration, optional hook assembly, inspection, and readiness for truck installation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="layout" class="shell">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Production System Design</div>
+          <h2>The proposed layout organizes Titan assembly into six functional areas.</h2>
+        </div>
+        <p>
+          The layout is intentionally focused on the Titan Pump Hoist assembly process rather than the entire facility. It shows the work areas needed to support fabrication, surface preparation, painting, parallel assembly, and final truck integration.
+        </p>
+      </div>
+
+      <div class="split">
+        <figure class="figure-card">
+          <img src="assets/taylor-layout.webp" alt="Proposed Titan Pump Hoist assembly layout from the report" />
+          <figcaption class="caption">Figure 4. Proposed Titan Pump Hoist assembly layout from the project report.</figcaption>
+        </figure>
+        <div class="card">
+          <h3>Cell structure</h3>
+          <p>The production system is organized into six functional areas:</p>
+          <ul class="list">
+            <li>Fabrication Cell</li>
+            <li>Sandblasting Area</li>
+            <li>Paint Area</li>
+            <li>Mast Assembly Cell</li>
+            <li>Main Frame Assembly Cell</li>
+            <li>Truck Assembly Cell</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Capacity Analysis</div>
+          <h2>Labor and capacity were evaluated under realistic operating constraints.</h2>
+        </div>
+        <p>
+          The analysis used the finalized task schedule, labor-hour requirements, cell assignments, and production constraints to test whether the proposed system could operate without overloading key resources.
+        </p>
+      </div>
+
+      <div class="method-grid">
+        <article class="card"><h3>521.5 labor hours</h3><p>Total labor required to complete one Titan Pump Hoist under the proposed task schedule.</p></article>
+        <article class="card"><h3>8-worker constraint</h3><p>Workers were assigned dynamically based on workload demand instead of being permanently tied to individual tasks.</p></article>
+        <article class="card"><h3>Primary pacing resource</h3><p>The Truck Assembly Cell sets the release rhythm because each truck occupies this cell from Day 13 to Day 21.</p></article>
+      </div>
+    </section>
+
+    <section id="inventory" class="shell">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Inventory Planning Structure</div>
+          <h2>A differentiated inventory policy was recommended to support the production schedule.</h2>
+        </div>
+        <p>
+          The project used ABC analysis and operational factors such as lead time, buffer requirements, usage frequency, customization level, physical size, storage burden, and reuse potential.
+        </p>
+      </div>
+
+      <div class="policy-grid">
+        <article class="policy-card">
+          <span class="policy-label">Policy 01</span>
+          <h3>Order per Customer Order</h3>
+          <p>Recommended for high-cost, build-specific, optional, bulky, or highly customized parts where advance stocking creates financial or configuration risk.</p>
+          <div class="tags"><span class="tag">Chassis</span><span class="tag">Service Body</span><span class="tag">Skid Weldment</span><span class="tag">Mast Weldments</span></div>
+        </article>
+        <article class="policy-card">
+          <span class="policy-label">Policy 02</span>
+          <h3>Min-Max Stocking</h3>
+          <p>Recommended for standard or repeat-use components that should remain available for production but still require inventory control.</p>
+          <div class="tags"><span class="tag">Pumps</span><span class="tag">Valve Systems</span><span class="tag">Hydraulic Units</span><span class="tag">Repeat-use assemblies</span></div>
+        </article>
+        <article class="policy-card">
+          <span class="policy-label">Policy 03</span>
+          <h3>Bulk Stocking</h3>
+          <p>Recommended for low-cost, compact, frequently used components where stockouts can interrupt flow and frequent ordering adds administrative effort.</p>
+          <div class="tags"><span class="tag">Cables</span><span class="tag">Brackets</span><span class="tag">Mounts</span><span class="tag">Small hardware</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="schedule" class="shell">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Production Schedule</div>
+          <h2>The 21-working-day schedule supports a controlled multi-truck production rhythm.</h2>
+        </div>
+        <p>
+          The single-unit Gantt schedule shows task timing across the 21-day build cycle. Under continuous operation, the system reaches steady state with up to three trucks in process and a new truck released every nine days.
+        </p>
+      </div>
+
+      <div class="schedule-grid">
+        <figure class="figure-card">
+          <img src="assets/taylor-gantt.webp" alt="Production schedule Gantt chart for one Titan Pump Hoist" />
+          <figcaption class="caption">Figure D1. Production schedule for one Titan Pump Hoist unit across the 21-working-day build timeline.</figcaption>
+        </figure>
+        <div class="note-stack">
+          <article class="note-card"><span>Single-unit schedule</span><p>Fabrication, sandblasting, painting, assembly, truck integration, testing, and inspection are sequenced across 21 working days.</p></article>
+          <article class="note-card"><span>Multi-truck operation</span><p>A new truck can be released every 9 days without overloading the Fabrication Cell or Truck Assembly Cell.</p></article>
+          <article class="note-card"><span>Steady-state WIP</span><p>The effective steady-state level is three trucks in process: one in fabrication, one in intermediate stages, and one in truck assembly.</p></article>
+          <article class="note-card"><span>Implementation note</span><p>Final inventory parameters should be calculated using actual supplier lead times, costs, demand history, and storage constraints.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer-section">
+      <div class="shell footer-grid">
+        <div>
+          <h2>Project Scope</h2>
+          <p>
+            The final recommendation integrates a capacity-driven production system with an inventory policy framework. The production system defines when materials are needed, while the inventory framework determines how materials should be ordered, stocked, or controlled.
+          </p>
+        </div>
+        <ul class="footer-list">
+          <li>Production flow analysis</li>
+          <li>Cell-based layout design</li>
+          <li>Labor allocation and capacity validation</li>
+          <li>Multi-truck production scheduling</li>
+          <li>ABC inventory classification</li>
+          <li>Order per Customer Order, Min-Max, and Bulk Stocking policies</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Taylor Rig and Equipment LLC · Titan Pump Hoist Production System and Inventory Planning · May 2026
+  </footer>
+
+  <script>
+    const buttons = document.querySelectorAll('.tab-button');
+    const panels = document.querySelectorAll('.tab-panel');
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((item) => item.classList.remove('active'));
+        panels.forEach((panel) => panel.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById(button.dataset.tab).classList.add('active');
+      });
+    });
+
+    const topbar = document.querySelector('.topbar');
+    const updateTopbar = () => {
+      topbar.classList.toggle('scrolled', window.scrollY > 8);
+    };
+    updateTopbar();
+    window.addEventListener('scroll', updateTopbar, { passive: true });
+
+    const animatedItems = document.querySelectorAll(
+      'section:not(.hero) .section-head, section:not(.hero) .metric, section:not(.hero) .card, section:not(.hero) .figure-card, section:not(.hero) .policy-card, section:not(.hero) .note-card, section:not(.hero) .tabs, .footer-section .footer-grid'
+    );
+
+    animatedItems.forEach((item, index) => {
+      item.classList.add('reveal-item');
+      item.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
+    });
+
+    const parseMetricText = (text) => {
+      const chars = Array.from(text);
+      const startIndex = chars.findIndex((char) => char >= '0' && char <= '9');
+      if (startIndex < 0) return null;
+
+      let endIndex = startIndex;
+      while (endIndex < chars.length) {
+        const char = chars[endIndex];
+        if (!((char >= '0' && char <= '9') || char === '.')) break;
+        endIndex += 1;
+      }
+
+      return {
+        prefix: chars.slice(0, startIndex).join(''),
+        target: Number(chars.slice(startIndex, endIndex).join('')),
+        suffix: chars.slice(endIndex).join('')
+      };
+    };
+
+    const countMetric = (metric) => {
+      const valueElement = metric.querySelector('strong');
+      if (!valueElement || valueElement.dataset.counted === 'true') return;
+
+      const original = valueElement.textContent.trim();
+      const parsed = parseMetricText(original);
+      if (!parsed || Number.isNaN(parsed.target)) return;
+
+      valueElement.dataset.counted = 'true';
+      const duration = 900;
+      const start = performance.now();
+
+      const render = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(parsed.target * eased);
+        valueElement.textContent = `${parsed.prefix}${current}${parsed.suffix}`;
+        if (progress < 1) {
+          requestAnimationFrame(render);
+        } else {
+          valueElement.textContent = original;
+        }
+      };
+
+      requestAnimationFrame(render);
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          if (entry.target.classList.contains('metric')) {
+            countMetric(entry.target);
+          }
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.16, rootMargin: '0px 0px -40px 0px' });
+
+    animatedItems.forEach((item) => observer.observe(item));
+  </script>
+</body>
+</html>
